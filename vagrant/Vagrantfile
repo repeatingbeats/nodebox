@@ -1,0 +1,19 @@
+Vagrant::Config.run do |config|
+
+  config.vm.box = "ubuntu-lucid-32"
+  config.vm.forward_port "web", 80, 8080
+  config.vm.share_folder("nodebox-app", "/nodebox-app", "../nodebox-app")
+
+  config.vm.provision :chef_solo do | chef |
+    chef.cookbooks_path = ["cookbooks", "site-cookbooks"]
+    chef.add_recipe("nodebox-app")
+    chef.json.merge!({
+      :appname => "nodebox-app",
+      :nodejs => {
+        :version => "0.2.6"
+      }
+    });
+  end
+
+end
+
