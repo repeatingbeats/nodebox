@@ -5,7 +5,7 @@ Vagrant::Config.run do |config|
   config.vm.share_folder("nodebox-app", "/nodebox-app", "../nodebox-app")
 
   config.vm.provision :chef_solo do | chef |
-    chef.cookbooks_path = ["cookbooks", "site-cookbooks"]
+    chef.cookbooks_path = ["cookbooks"]
     chef.add_recipe("nodebox-app")
     chef.json.merge!({
       :appname => "nodebox-app",
