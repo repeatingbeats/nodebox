@@ -9,9 +9,11 @@ Vagrant::Config.run do |config|
     chef.add_recipe("nodebox-app")
     chef.json.merge!({
       :appname => "nodebox-app",
+      :node_user => "vagrant",
       :nodejs => {
         :version => "0.2.6"
-      }
+      },
+      :node_modules => [ "expresso", "nodeunit", "mongoose" ]
     });
   end
 
