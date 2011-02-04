@@ -1,0 +1,11 @@
+#!upstart
+description "<%= node[:appname] %> server"
+author      "slloyd"
+
+start on startup
+stop on shutdown
+
+script
+  export HOME="/root"
+  exec sudo <%= node[:nodejs][:dir] %>/bin/node /<%= node[:appname] %>/app.js 2>&1 >> /var/log/node.log
+end script

@@ -6,7 +6,7 @@ apt_update = execute "update apt" do
 end
 apt_update.run_action(:run)
 
-%w{vim curl man-db git-core}.each do | pkg |
+%w{vim curl man-db git-core upstart}.each do | pkg |
   install_package = package pkg do
     action :nothing
   end
@@ -30,5 +30,12 @@ node[:node_modules].each do | node_module |
     code "npm install #{node_module}"
     not_if "npm list installed | grep '^#{node_module}'"
   end
+end
+
+template "/etc/init/#{node[:appname]}.conf" do
+  source "upstart.erb"
+  owner "root"
+  group "root"
+  mode 0755
 end
 
