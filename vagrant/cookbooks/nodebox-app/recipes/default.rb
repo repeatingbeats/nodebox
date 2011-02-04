@@ -1,8 +1,4 @@
 
-class Chef::Resource
-  include NodeHelpers
-end
-
 apt_update = execute "update apt" do
   user "root"
   command "apt-get update"
@@ -24,7 +20,7 @@ include_recipe "nodejs::npm"
 bash "give vagrant ownership of /usr/local" do
   user "root"
   code "chown -R vagrant /usr/local"
-  not_if { chowned_usrlocal? }
+  not_if `stat -c %U #{node[:nodejs][:dir]}` == "#{node[:node_user]}"
 end
 
 # install our required npm modules
@@ -32,6 +28,7 @@ node[:node_modules].each do | node_module |
   bash "npm install #{node_module}" do
     user node[:node_user]
     code "npm install #{node_module}"
+    not_if "npm list installed | grep '^#{node_module}'"
   end
 end
 
