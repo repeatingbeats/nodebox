@@ -1,0 +1,10 @@
+#!monit
+set logfile /var/log/monit.log
+
+check host <%= node[:appname] %> with address 127.0.0.1
+  start program = "/sbin/start <%= node[:appname] %>"
+  stop program  = "/sbin/stop <%= node[:appname] %>"
+  if failed port 8000 protocol HTTP
+    request /
+    with timeout 10 seconds
+    then restart

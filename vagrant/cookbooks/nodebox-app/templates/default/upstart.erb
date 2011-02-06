@@ -7,5 +7,5 @@ stop on shutdown
 
 script
   export HOME="/root"
-  exec sudo <%= node[:nodejs][:dir] %>/bin/node /<%= node[:appname] %>/app.js 2>&1 >> /var/log/node.log
+  exec sudo -u vagrant sh -c "exec <%= node[:nodejs][:dir] %>/bin/node /<%= node[:appname] %>/app.js >> /var/log/node.log 2>&1"
 end script

@@ -13,7 +13,7 @@ Vagrant::Config.run do |config|
       :nodejs => {
         :version => "0.2.6"
       },
-      :node_modules => [ "expresso", "nodeunit", "mongoose" ]
+      :node_modules => [ "express", "nodeunit", "mongoose" ]
     });
   end
 
