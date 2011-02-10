@@ -6,5 +6,5 @@ start on startup
 stop on shutdown
 
 script
-  sudo -u vagrant <%= node[:nodejs][:dir] %>/bin/node /<%= node[:appname] %>.app.js >> /var/log/node.log 2>&1 
+  sudo -u vagrant <%= node[:nodejs][:dir] %>/bin/node /<%= node[:appname] %>/app.js >> /var/log/node.log 2>&1 
 end script
