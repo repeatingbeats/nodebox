@@ -33,9 +33,15 @@ node[:node_modules].each do | node_module |
   end
 end
 
+# create user to run node
+user "#{node[:node_user]}" do
+  system true
+  action :create
+end
+
 execute "start upstart" do
   user "root"
-  command "start #{node[:appname]}"
+  command "start #{node[:app][:name]}"
   action :nothing
 end
 
@@ -45,7 +51,7 @@ execute "start monit" do
   action :nothing
 end
 
-template "/etc/init/#{node[:appname]}.conf" do
+template "/etc/init/#{node[:app][:name]}.conf" do
   source "upstart.erb"
   owner "root"
   group "root"

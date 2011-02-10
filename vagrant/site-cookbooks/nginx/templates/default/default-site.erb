@@ -1,19 +1,19 @@
-upstream <%= node[:appname] %> {
-  server <%= node[:hostname] %>:<%= node[:app_port] %>;
+upstream <%= node[:app][:name] %> {
+  server <%= node[:hostname] %>:<%= node[:app][:port] %>;
 }
 
 server {
   listen 80;
   server_name <%= node[:hostname] %>
 
-  access_log <%= node[:nginx][:log_dir] %>/<% node[:appname] %>.access.log;
+  access_log <%= node[:nginx][:log_dir] %>/<% node[:app][:name] %>.access.log;
 
   location / {
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header Host $http_host;
     proxy_set_header X-NginX-Proxy true;
 
-    proxy_pass http://<%= node[:appname] %>;
+    proxy_pass http://<%= node[:app][:name] %>;
     proxy_redirect off;
   }
 }

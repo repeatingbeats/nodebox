@@ -1,10 +1,10 @@
 #!upstart
-description "<%= node[:appname] %> server"
+description "<%= node[:app][:name] %> server"
 author      "slloyd"
 
 start on startup
 stop on shutdown
 
 script
-  sudo -u vagrant <%= node[:nodejs][:dir] %>/bin/node /<%= node[:appname] %>/app.js >> /var/log/node.log 2>&1 
+  sudo -u <%= node[:node_user] %> <%= node[:nodejs][:dir] %>/bin/node /<%= node[:app][:path] %>/app.js >> /var/log/<%= node[:app][:name] %>.log 2>&1 
 end script
