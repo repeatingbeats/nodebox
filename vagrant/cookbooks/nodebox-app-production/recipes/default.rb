@@ -13,6 +13,7 @@ apt_update.run_action(:run)
   install_package.run_action(:install)
 end
 
+include_recipe "nginx"
 include_recipe "nodejs"
 include_recipe "nodejs::npm"
 
@@ -62,6 +63,5 @@ end
 
 =begin
   TODO:
-  - create user for node and run node with reduced privileges
   - reload on code changes in development mode
 =end

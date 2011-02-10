@@ -1,3 +1,17 @@
+# TODO explain the difference
+NODEBOX_PRODUCTION = {
+  :port => 8080,
+  :recipe => 'nodebox-app-production'
+}
+
+NODEBOX_DEVELOPMENT = {
+  :port => 80,
+  :recipe => 'nodebox-app-development'
+}
+
+# TODO explain the difference between the two box setups
+nodebox_env = NODEBOX_PRODUCTION # or NODEBOX_DEVELOPMENT
+
 Vagrant::Config.run do |config|
 
   config.vm.box = "ubuntu-lucid-32"
@@ -5,10 +19,11 @@ Vagrant::Config.run do |config|
   config.vm.share_folder("nodebox-app", "/nodebox-app", "./../")
 
   config.vm.provision :chef_solo do | chef |
-    chef.cookbooks_path = ["cookbooks"]
-    chef.add_recipe("nodebox-app")
+    chef.cookbooks_path = [ "cookbooks", "site-cookbooks" ]
+    chef.add_recipe(nodebox_env[:recipe])
     chef.json.merge!({
       :appname => "nodebox-app",
+      :app_port => nodebox_env[:port],
       :node_user => "vagrant",
       :nodejs => {
         :version => "0.2.6"
