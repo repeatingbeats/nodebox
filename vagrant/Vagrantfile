@@ -1,7 +1,8 @@
 # TODO explain the difference
 NODEBOX_PRODUCTION = {
   :port => 8080,
-  :recipe => 'nodebox-app-production'
+  :recipe => 'nodebox-app-production',
+  :required_modules => []
 }
 
 NODEBOX_DEVELOPMENT = {
@@ -11,7 +12,7 @@ NODEBOX_DEVELOPMENT = {
 }
 
 # TODO explain the difference between the two box setups
-nodebox_env = NODEBOX_DEVELOPMENT # or NODEBOX_DEVELOPMENT
+nodebox_env = NODEBOX_PRODUCTION # or NODEBOX_DEVELOPMENT
 # add any node modules that you want installed
 app_modules = [ "express", "nodeunit", "mongoose" ]
               .concat(nodebox_env[:required_modules])
