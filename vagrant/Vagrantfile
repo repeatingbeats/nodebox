@@ -6,11 +6,15 @@ NODEBOX_PRODUCTION = {
 
 NODEBOX_DEVELOPMENT = {
   :port => 80,
-  :recipe => 'nodebox-app-development'
+  :recipe => 'nodebox-app-development',
+  :required_modules => [ "supervisor" ]
 }
 
 # TODO explain the difference between the two box setups
-nodebox_env = NODEBOX_PRODUCTION # or NODEBOX_DEVELOPMENT
+nodebox_env = NODEBOX_DEVELOPMENT # or NODEBOX_DEVELOPMENT
+# add any node modules that you want installed
+app_modules = [ "express", "nodeunit", "mongoose" ]
+              .concat(nodebox_env[:required_modules])
 
 app_name = 'nodebox-app'
 app_path = "/var/www/#{app_name}"
@@ -34,7 +38,7 @@ Vagrant::Config.run do |config|
       :nodejs => {
         :version => "0.4.0"
       },
-      :node_modules => [ "express", "nodeunit", "mongoose" ]
+      :node_modules => app_modules
     });
   end
 

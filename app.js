@@ -3,7 +3,7 @@ var ENV_PRODUCTION = 'production',
     ENV_DEVELOPMENT = 'development'
 ;
 
-var nodeboxEnv = ENV_PRODUCTION;
+var nodeboxEnv = ENV_DEVELOPMENT;
 var nodeboxPort = (nodeboxEnv == ENV_PRODUCTION) ? 8080 : 80;
 
 
