@@ -6,6 +6,8 @@ apt_update = execute "update apt" do
 end
 apt_update.run_action(:run)
 
+# we don't actually need all these. I just like to have them.
+# upstart and monit are required.
 %w{vim curl man-db git-core upstart monit}.each do | pkg |
   install_package = package pkg do
     action :nothing
@@ -17,17 +19,10 @@ include_recipe "nginx"
 include_recipe "nodejs"
 include_recipe "nodejs::npm"
 
-# change ownership of /usr/local so npm plays nicely with node
-bash "give vagrant ownership of /usr/local" do
-  user "root"
-  code "chown -R vagrant /usr/local"
-  not_if `stat -c %U #{node[:nodejs][:dir]}` == "#{node[:node_user]}"
-end
-
 # install our required npm modules
 node[:node_modules].each do | node_module |
   bash "npm install #{node_module}" do
-    user node[:node_user]
+    user "root"
     code "npm install #{node_module}"
     not_if "npm list installed | grep '^#{node_module}'"
   end
@@ -67,7 +62,3 @@ template "/etc/monit/monitrc" do
   notifies :run, resources(:execute => "start monit")
 end
 
-=begin
-  TODO:
-  - reload on code changes in development mode
-=end

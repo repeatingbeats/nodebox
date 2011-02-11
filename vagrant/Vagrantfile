@@ -32,7 +32,7 @@ Vagrant::Config.run do |config|
       },
       :node_user => "node",
       :nodejs => {
-        :version => "0.2.6"
+        :version => "0.4.0"
       },
       :node_modules => [ "express", "nodeunit", "mongoose" ]
     });
