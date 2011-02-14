@@ -1,0 +1,10 @@
+{
+  "app_name": "nodebox-example",
+  "environment": "production",
+  "app_port": 8080,
+  "host_port": 8000,
+  "modules": [ "express",
+               "nodeunit",
+               "mongoose" ],
+  "node_version": "0.4.0"
+}

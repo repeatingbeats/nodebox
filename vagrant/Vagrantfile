@@ -1,47 +1,35 @@
-# TODO explain the difference
-NODEBOX_PRODUCTION = {
-  :port => 8080,
-  :recipe => 'nodebox-app-production',
-  :required_modules => []
-}
-
-NODEBOX_DEVELOPMENT = {
-  :port => 80,
-  :recipe => 'nodebox-app-development',
-  :required_modules => [ "supervisor" ]
-}
+nb_config = JSON.parse(File.read('../nodebox.json'))
 
 # TODO explain the difference between the two box setups
-nodebox_env = NODEBOX_PRODUCTION # or NODEBOX_DEVELOPMENT
-# add any node modules that you want installed
-app_modules = [ "express", "nodeunit", "mongoose" ]
-              .concat(nodebox_env[:required_modules])
-
-app_name = 'nodebox-app'
+nodebox_env = nb_config['environment']
+required_modules = (nodebox_env == 'development') ? [ "supervisor" ] : []
+app_modules = nb_config['modules'] && nb_config['modules'].concat(required_modules) || required_modules
+app_name = nb_config['app_name']
 app_path = "/var/www/#{app_name}"
+app_port = (nodebox_env == 'development') ? 80 : nb_config['app_port'] || 8080
+recipe = "nodebox-#{nodebox_env}"
 
-Vagrant::Config.run do |config|
+Vagrant::Config.run do |vgr_config|
 
-  config.vm.box = "ubuntu-lucid-32"
-  config.vm.forward_port "web", 80, 8000
-  config.vm.share_folder(app_name, app_path, "./../")
+  vgr_config.vm.box = "ubuntu-lucid-32"
+  vgr_config.vm.forward_port "web", 80, nb_config['host_port']
+  vgr_config.vm.share_folder(app_name, app_path, "./../")
 
-  config.vm.provision :chef_solo do | chef |
+  vgr_config.vm.provision :chef_solo do | chef |
     chef.cookbooks_path = [ "cookbooks", "site-cookbooks" ]
-    chef.add_recipe(nodebox_env[:recipe])
+    chef.add_recipe(recipe)
     chef.json.merge!({
       :app => {
         :name => app_name,
-        :port => nodebox_env[:port],
+        :port => app_port,
         :path => app_path,
       },
       :node_user => "node",
       :nodejs => {
-        :version => "0.4.0"
+        :version => nb_config['node_version']
       },
       :node_modules => app_modules
     });
   end
-
 end
 
