@@ -1,6 +1,5 @@
 nb_config = JSON.parse(File.read('../nodebox.json'))
 
-# TODO explain the difference between the two box setups
 nodebox_env = nb_config['environment']
 required_modules = (nodebox_env == 'development') ? [ "supervisor" ] : []
 app_modules = nb_config['modules'] && nb_config['modules'].concat(required_modules) || required_modules
