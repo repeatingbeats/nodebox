@@ -7,8 +7,7 @@ end
 apt_update.run_action(:run)
 
 # we don't actually need all these. I just like to have them.
-# upstart and monit are required.
-%w{vim curl man-db git-core upstart monit}.each do | pkg |
+%w{vim curl man-db git-core}.each do | pkg |
   install_package = package pkg do
     action :nothing
   end
