@@ -25,7 +25,8 @@ Vagrant::Config.run do |vgr_config|
       },
       :node_user => "node",
       :nodejs => {
-        :version => nb_config['node_version']
+        :version => nb_config['node_version'],
+        :npm => nb_config['npm_version']
       },
       :node_modules => app_modules
     });
