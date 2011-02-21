@@ -20,14 +20,16 @@
 
 include_recipe "nodejs"
 
+package "curl"
+
 bash "install npm - package manager for node" do
   cwd "/usr/local/src"
   user "root"
   code <<-EOH
     mkdir -p npm-v#{node[:nodejs][:npm]} && \
     cd npm-v#{node[:nodejs][:npm]}
-    curl -L http://github.com/isaacs/npm/tarball/v#{node[:nodejs][:npm]} | tar xzf - --strip-components=1 && \
-    make uninstall install
+    curl -L http://registry.npmjs.org/npm/-/npm-#{node[:nodejs][:npm]}.tgz | tar xzf - --strip-components=1 && \
+    make uninstall dev
   EOH
   not_if {File.exists?("/usr/local/bin/npm@#{node[:nodejs][:npm]}")}
 end
