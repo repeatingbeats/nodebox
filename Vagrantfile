@@ -10,7 +10,7 @@ recipe = "nodebox-#{nodebox_env}"
 
 Vagrant::Config.run do |vgr_config|
 
-  vgr_config.vm.box = "ubuntu-lucid-32"
+  vgr_config.vm.box = "lucid32"
   vgr_config.vm.forward_port "web", 80, nb_config['host_port']
   vgr_config.vm.share_folder(app_name, app_path, "./../")
 
