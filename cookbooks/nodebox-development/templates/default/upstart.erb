@@ -2,7 +2,7 @@
 description "<%= node[:app][:name] %> server"
 author      "slloyd"
 
-start on (local-filesystems and net-device-up IFACE=eth0) or (runlevel [345])
+start on (local-filesystems and remote-filesystems and net-device-up IFACE=eth0)
 stop on shutdown
 
 script
