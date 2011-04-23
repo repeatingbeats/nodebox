@@ -5,13 +5,14 @@ required_modules = (nodebox_env == 'development') ? [ "supervisor" ] : []
 app_modules = nb_config['modules'] && nb_config['modules'].concat(required_modules) || required_modules
 app_name = nb_config['app_name']
 app_path = "/var/www/#{app_name}"
-app_port = (nodebox_env == 'production') ? 80 : nb_config['app_port'] || 8080
+app_port = nb_config['app_port'] || 8080
+web_server_port = (nodebox_env == 'production') ? 80 : app_port
 recipe = "nodebox-#{nodebox_env}"
 
 Vagrant::Config.run do |vgr_config|
 
   vgr_config.vm.box = "lucid32"
-  vgr_config.vm.forward_port "web", app_port, nb_config['host_port']
+  vgr_config.vm.forward_port "web", web_server_port, nb_config['host_port']
   vgr_config.vm.share_folder(app_name, app_path, "./../")
 
   vgr_config.vm.provision :chef_solo do | chef |
