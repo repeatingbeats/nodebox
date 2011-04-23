@@ -24,6 +24,9 @@ Vagrant::Config.run do |vgr_config|
         :port => app_port,
         :path => app_path,
       },
+	  :redis => {
+		:version => "2.2.5",
+	  },
       :node_user => "node",
       :nodejs => {
         :version => nb_config['node_version'],
