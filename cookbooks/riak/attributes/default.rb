@@ -17,6 +17,7 @@
 # limitations under the License.
 #
 
+include_attribute "riak::service"
 include_attribute "riak::package"
 include_attribute "riak::core"
 include_attribute "riak::erlang"
@@ -25,4 +26,4 @@ include_attribute "riak::kv"
 include_attribute "riak::sasl"
 include_attribute "riak::err"
 include_attribute "riak::luwak"
-include_attribute "riak::service"
+

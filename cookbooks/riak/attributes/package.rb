@@ -25,7 +25,8 @@ default.riak.package.version.build = "1"
 default.riak.package.source_checksum = '2fa57ae065c6f29648b30d2df0a8fc8372305a62859dec492232d366236ad6c5'
 default.riak.package.config_dir = "/etc/riak"
 if (node[:riak][:package][:type]).eql?("source")
-  default.riak.package.prefix = "/usr/local"
-  default.riak.package.config_dir = node.riak.package.prefix + "/riak/etc"
+	default.riak.package.prefix = "/usr/local"
+	default.riak.package.root_dir = "#{default.riak.package.prefix}/#{default.riak.service.name}"
+	default.riak.package.config_dir = "#{default.riak.package.root_dir}/etc"
 end
 

@@ -18,26 +18,65 @@
 # limitations under the License.
 #
 
-include_recipe "build-essential"
+nodejs_installed = `#{node[:nodejs][:root_dir]}/bin/node -v 2>&1`.include? "v#{node[:nodejs][:version]}"
 
-case node[:platform]
-  when "centos","redhat","fedora"
-    package "openssl-devel"
-  when "debian","ubuntu"
-    package "libssl-dev"
+if not nodejs_installed
+	include_recipe "build-essential"
+
+	case node[:platform]
+	  when "centos","redhat","fedora"
+		package "openssl-devel"
+	  when "debian","ubuntu"
+		package "libssl-dev"
+	end
+
+	base_uri = "http://nodejs.org/dist/"
+	base_filename = "node-v#{node[:nodejs][:version]}"
+	package_file = "#{base_filename}.tar.gz"
+
+	group "#{node[:nodejs][:service][:group]}"
+
+	user "#{node[:nodejs][:service][:user]}" do
+		gid "#{node[:nodejs][:service][:group]}"
+		shell "/bin/bash"
+		home "#{node[:nodejs][:root_dir]}"
+		system true
+	end
+
+	directory "/tmp/nodejs_pkg" do
+		owner "root"
+		action :create
+		mode 0755
+	end
+
+	remote_file "/tmp/nodejs_pkg/#{package_file}" do
+		source base_uri + package_file
+		owner "root"
+		mode 0644
+	end
+
+	execute "nodejs-src-unpack" do
+		cwd "/tmp/nodejs_pkg"
+		command "tar xvfz #{package_file}"
+	end
+
+	execute "nodejs-src-configure" do
+		cwd "/tmp/nodejs_pkg/#{base_filename}"
+		command "./configure --prefix=#{node[:nodejs][:root_dir]}"
+	end
+
+	execute "nodejs-src-make" do
+		cwd "/tmp/nodejs_pkg/#{base_filename}"
+		command "make"
+	end
+
+	execute "nodejs-src-make-install" do
+		cwd "/tmp/nodejs_pkg/#{base_filename}"
+		command "make install"
+	end
+	
+	execute "nodejs-src-file-permissions" do
+		command "sudo chown -R #{node[:nodejs][:service][:user]}:#{node[:nodejs][:service][:group]} #{node[:nodejs][:root_dir]}"
+		only_if {File.directory?("#{node[:nodejs][:root_dir]}") }
+	end
 end
-
-bash "install nodejs from source" do
-  cwd "/usr/local/src"
-  user "root"
-  code <<-EOH
-    wget http://nodejs.org/dist/node-v#{node[:nodejs][:version]}.tar.gz && \
-    tar zxf node-v#{node[:nodejs][:version]}.tar.gz && \
-    cd node-v#{node[:nodejs][:version]} && \
-    ./configure --prefix=#{node[:nodejs][:dir]} && \
-    make && \
-    make install
-  EOH
-  not_if do `#{node[:nodejs][:dir]}/bin/node -v 2>&1`.include? "v#{node[:nodejs][:version]}" end
-end
-

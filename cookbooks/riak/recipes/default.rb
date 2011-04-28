@@ -17,19 +17,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-riak_installed = File.directory?("#{node[:riak][:package][:prefix]}/riak")
+if node[:riak][:package][:type].eql?("source")
+	riak_installed = File.directory?("#{node[:riak][:package][:root_dir]}")
+else
+	riak_installed = false
+end
 
 if not riak_installed
 	if node[:riak][:package][:type].eql?("source")
 		include_recipe "erlang"
-		
-		node[:riak][:core][:ring_state_dir] = "data/ring"
-#		node[:riak][:kv][:pb_ip] = "127.0.0.1"
-		node[:riak][:kv][:mapred_queue_dir] = "data/mr_queue"
-		node[:riak][:bitcask][:data_root] = "data/bitcask"  
-		node[:riak][:sasl][:sasl_error_logger][:file] = "log/sasl-error.log"
-		node[:riak][:sasl][:error_logger_mf_dir] = "log/sasl"
 	end
 	
 	case node[:platform]
@@ -65,7 +61,7 @@ if not riak_installed
 			user "#{node[:riak][:service][:user]}" do
 			  gid "#{node[:riak][:service][:group]}"
 			  shell "/bin/bash"
-			  home "#{node[:riak][:package][:prefix]}/riak/lib"
+			  home "#{node[:riak][:package][:root_dir]}/lib"
 			  system true
 			end	
 		end
@@ -111,7 +107,7 @@ if not riak_installed
 									[ "ubuntu", "debian" ] => {"default" => Chef::Provider::Package::Dpkg},
 									[ "redhat", "centos", "fedora", "suse" ] => {"default" => Chef::Provider::Package::Rpm}
 									)
-	  end
+	end
 	when "source"
 	  execute "riak-src-unpack" do
 		cwd "/tmp/riak_pkg"
@@ -124,17 +120,23 @@ if not riak_installed
 	  end  
 
 	  execute "riak-remove-existing-installation" do
-		command "sudo rm -r #{node[:riak][:package][:prefix]}/riak"
-		only_if {File.directory?("#{node[:riak][:package][:prefix]}/riak") }
+		command "sudo rm -r #{node[:riak][:package][:root_dir]}"
+		only_if {File.directory?("#{node[:riak][:package][:root_dir]}") }
+	  end
+	  
+	  directory "#{node[:riak][:package][:root_dir]}" do
+		owner "root"
+		action :create
+		mode 0755
 	  end
 	  
 	  execute "riak-src-install" do
-		command "mv /tmp/riak_pkg/#{base_filename}/rel/riak #{node[:riak][:package][:prefix]}"
+		command "sudo mv /tmp/riak_pkg/#{base_filename}/rel/riak/* #{node[:riak][:package][:root_dir]}"
 	  end
 	  
 	  execute "riak-src-file-permissions" do
-		command "sudo chown -R #{node[:riak][:service][:user]}:#{node[:riak][:service][:group]} #{node[:riak][:package][:prefix]}/riak"
-		only_if {File.directory?("#{node[:riak][:package][:prefix]}/riak") }
+		command "sudo chown -R #{node[:riak][:service][:user]}:#{node[:riak][:service][:group]} #{node[:riak][:package][:root_dir]}"
+		only_if {File.directory?("#{node[:riak][:package][:root_dir]}") }
 	  end
 	end
 
@@ -169,14 +171,14 @@ if not riak_installed
 	  only_if {node[:riak][:package][:type].eql?("source")}
 	end
 
-#	if node[:riak][:package][:type].eql?("binary")
-	  service "riak" do
+
+	service "riak" do
 		action [ :enable ]
 		supports :start => true, :stop => true, :reload => true
 		subscribes :reload, resources(:template => [ "#{node[:riak][:package][:config_dir]}/app.config",
-													  "#{node[:riak][:package][:config_dir]}/vm.args" ])
-	  end
-#	end	
+												  "#{node[:riak][:package][:config_dir]}/vm.args" ])
+	end
+
 end
 
 

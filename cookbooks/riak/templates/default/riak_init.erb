@@ -14,16 +14,16 @@
 . /lib/lsb/init-functions
 
 #check for script,config, and data dirs
-[ -x <%= node[:riak][:package][:prefix] %>/riak/bin ] || exit 0
+[ -x <%= node[:riak][:package][:root_dir] %>/bin ] || exit 0
 [ -d <%= node[:riak][:package][:config_dir] %>  ] || exit 0
-[ -d <%= node[:riak][:package][:prefix] %>/riak/lib ] || exit 0
+[ -d <%= node[:riak][:package][:root_dir] %>/lib ] || exit 0
 
 RETVAL=0
 
 PATH=sbin:/usr/sbin:/bin:/usr/bin
 DESC="a distributed key value store"
 NAME=riak
-DAEMON=<%= node[:riak][:package][:prefix] %>/riak/bin/$NAME
+DAEMON=<%= node[:riak][:package][:root_dir] %>/bin/$NAME
 
 start() {
 	#Check if Riak is running

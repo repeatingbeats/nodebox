@@ -17,8 +17,10 @@
 # limitations under the License.
 #
 
-
 default.riak.kv.mapred_queue_dir = "/var/lib/riak/mr_queue"
+if node[:riak][:package][:type].eql?("source")
+	default.riak.kv.mapred_queue_dir = "data/mr_queue"
+end
 default.riak.kv.mapper_batch_size = 5
 default.riak.kv.map_js_vm_count = 8
 default.riak.kv.reduce_js_vm_count = 6

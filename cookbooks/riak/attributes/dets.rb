@@ -18,5 +18,8 @@
 #
 
 if node.riak.kv.storage_backend == :riak_kv_dets_backend
-  default.riak.kv.riak_kv_dets_backend_root = "/var/lib/riak/dets"
+	default.riak.kv.riak_kv_dets_backend_root = "/var/lib/riak/dets"
+	if node[:riak][:package][:type].eql?("source")
+		default.riak.kv.riak_kv_dets_backend_root = "data/dets"
+	end
 end

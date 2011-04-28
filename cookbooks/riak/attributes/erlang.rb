@@ -19,7 +19,7 @@
 
 include_attribute "riak::core"
 
-default.riak.erlang.node_name = "riak@#{default.riak.core.http[0][0]}"
+default.riak.erlang.node_name = "#{default.riak.service.name}@#{default.riak.core.http[0][0]}"
 default.riak.erlang.cookie = "riak"
 default.riak.erlang.kernel_polling = true
 default.riak.erlang.async_threads = 64

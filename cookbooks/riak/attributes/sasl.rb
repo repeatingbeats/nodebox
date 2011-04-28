@@ -18,8 +18,14 @@
 #
 
 default.riak.sasl.sasl_error_logger.file = "/var/log/riak/sasl-error.log"
+if node[:riak][:package][:type].eql?("source")
+	default.riak.sasl.sasl_error_logger.file = "log/sasl-error.log"
+end
 default.riak.sasl.errlog_type = :error
 node.riak.sasl.errlog_type = (node.riak.sasl.errlog_type).to_s.to_sym
 default.riak.sasl.error_logger_mf_dir = "/var/log/riak/sasl"
+if node[:riak][:package][:type].eql?("source")
+	default.riak.sasl.error_logger_mf_dir = "log/sasl"
+end
 default.riak.sasl.error_logger_mf_maxbytes = 10485760
 default.riak.sasl.error_logger_mf_maxfiles = 5
