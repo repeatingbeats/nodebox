@@ -1,4 +1,4 @@
-
+# keep up to date
 apt_update = execute "update apt" do
   user "root"
   command "apt-get update"
@@ -14,35 +14,58 @@ apt_update.run_action(:run)
   install_package.run_action(:install)
 end
 
+# Setup Riak
+include_recipe "riak"
+#
+#user "#{node[:nodejs][:service][:user]}" do
+#  system true
+#  action :create
+#end
+#
+#execute "start Riak - #{node[:riak][:service][:name]}" do
+#  user "root"
+#  command "start #{node[:riak][:service][:name]}"
+#  action :nothing
+#end
+#
+#template "/etc/init/#{node[:riak][:service][:name]}.conf" do
+#  source "upstart.riak.conf.erb"
+#  owner "root"
+#  group "root"
+#  mode 0755
+#  notifies :run, resources(:execute => "start Riak - #{node[:riak][:service][:name]}")
+#end
+
+
 # no webserver! node will listen on port 80. As root! Hence, development.
-include_recipe "nodejs"
-include_recipe "nodejs::npm"
+#include_recipe "nodejs"
+#include_recipe "nodejs::npm"
 
 # install our required npm modules
-node[:node_modules].each do | node_module |
-  bash "npm install #{node_module}" do
-    user "root"
-    code "npm install #{node_module}"
-    not_if "npm list installed | grep '^#{node_module}'"
-  end
-end
+#node[:node_modules].each do | node_module |
+#  bash "npm install #{node_module}" do
+#    user "root"
+#    code "npm install #{node_module}"
+#    not_if "npm list installed | grep '^#{node_module}'"
+#  end
+#end
 
 # create user to run node
-user "#{node[:node_user]}" do
-  system true
-  action :create
-end
+#user "#{node[:nodejs][:service][:user]}" do
+#  system true
+#  action :create
+#end
 
-execute "start upstart" do
-  user "root"
-  command "start #{node[:app][:name]}"
-  action :nothing
-end
+#execute "start NodeJS - #{node[:app][:name]}" do
+#  user "root"
+#  command "start #{node[:app][:name]}"
+#  action :nothing
+#end
 
-template "/etc/init/#{node[:app][:name]}.conf" do
-  source "upstart.erb"
-  owner "root"
-  group "root"
-  mode 0755
-  notifies :run, resources(:execute => "start upstart")
-end
+#template "/etc/init/#{node[:app][:name]}.conf" do
+#  source "upstart.nodejs.conf.erb"
+#  owner "root"
+#  group "root"
+#  mode 0755
+#  notifies :run, resources(:execute => "start NodeJS - #{node[:app][:name]}")
+#end

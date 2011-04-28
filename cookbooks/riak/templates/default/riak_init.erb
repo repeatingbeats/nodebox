@@ -1,0 +1,133 @@
+#!/bin/bash
+#
+# Riak Distributed Data Store
+#
+# chkconfig: 2345 80 30
+# description: Riak is a distrubuted data store.
+# processname: beam
+# config: <%= node[:riak][:package][:config_dir] %>/app.config
+# config: <%= node[:riak][:package][:config_dir] %>/vm.args
+#
+
+# Source function library.
+#. /etc/rc.d/init.d/functions
+. /lib/lsb/init-functions
+
+#check for script,config, and data dirs
+[ -x <%= node[:riak][:package][:prefix] %>/riak/bin ] || exit 0
+[ -d <%= node[:riak][:package][:config_dir] %>  ] || exit 0
+[ -d <%= node[:riak][:package][:prefix] %>/riak/lib ] || exit 0
+
+RETVAL=0
+
+PATH=sbin:/usr/sbin:/bin:/usr/bin
+DESC="a distributed key value store"
+NAME=riak
+DAEMON=<%= node[:riak][:package][:prefix] %>/riak/bin/$NAME
+
+start() {
+	#Check if Riak is running
+	RETVAL=`$DAEMON ping`
+	if [ "$RETVAL" = "pong" ]; then
+		echo -e "$NAME is already running\n"
+		return 1
+	fi
+
+	# Start daemons.
+	echo -e $"Starting $NAME: "
+	su - <%= node[:riak][:service][:user] %> -c "$DAEMON start"
+	RETVAL=$?
+	
+	if [ $RETVAL -eq 0 ]; then
+		echo -e $"$NAME started\n"
+	else
+		echo -e $"$NAME failed to start\n"
+	fi
+	
+	return $RETVAL
+}
+
+stop() {
+	# Stop daemon.
+	echo -e $"Stopping $NAME: "
+	RETVAL=`$DAEMON ping`
+	
+	if [ "$RETVAL" = "pong" ]; then
+		su - <%= node[:riak][:service][:user] %> -c "$DAEMON stop 2>/dev/null 1>&2"
+	fi
+	sleep 2
+	RETVAL=`pidof beam.smp`
+	if [ "$RETVAL" = "" ]; then
+		echo -e "$NAME stopped\n"
+		return 0
+	else
+		echo -e "$NAME stop"
+	fi
+	sleep 10
+	RETVAL=`pidof beam.smp`
+	if [ "$RETVAL" = "" ]; then
+		echo -e "$NAME stopped\n"
+		return 0
+	else
+		echo -e "$NAME failed to stop\n"
+		return 1
+	fi
+}
+
+reload() {
+	# Restart the VM without exiting the process
+	echo -e $"Reloading $NAME: "
+	RETVAL=`$DAEMON ping`
+	if [ "$RETVAL" = "pong" ]; then
+		su - <%= node[:riak][:service][:user] %> -c "$DAEMON restart 2>/dev/null 1>&2" 
+		RETVAL=$?
+		
+		if [ $RETVAL -eq 0 ]; then
+			echo -e "$NAME restarted\n"
+			return 0
+		else
+			echo -e "$NAME failed to restart\n"
+			return 1
+		fi
+	fi
+	return $RETVAL
+}
+
+status() {
+	RETVAL=`$DAEMON ping`
+	if [ "$RETVAL" = "pong" ]; then
+		return 0
+	fi
+	
+	return 3
+}
+
+# See how we were called.
+case "$1" in
+	start)
+		start
+	;;
+	stop)
+		stop
+	;;
+	restart)
+		stop
+		start
+	;;
+	reload)
+		reload
+	;;
+	status)
+		RETVAL = status
+		exit $RETVAL
+	;;
+	ping)
+		RETVAL=`$DAEMON ping`
+		echo -e "$RETVAL"
+	;;
+	*)
+		echo $"Usage: $0 {start|stop|reload|restart|status|ping}"
+		exit 1
+esac
+
+exit $?

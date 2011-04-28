@@ -15,7 +15,9 @@ apt_update.run_action(:run)
   install_package.run_action(:install)
 end
 
+include_recipe "erlang"
 include_recipe "nginx"
+include_recipe "riak"
 include_recipe "nodejs"
 include_recipe "nodejs::npm"
 

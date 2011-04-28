@@ -1,8 +1,9 @@
 #
-# Cookbook Name:: nodejs
-# Attributes:: nodejs
+# Author:: Benjamin Black (<b@b3k.us>)
+# Cookbook Name:: riak
+# Recipe:: inno
 #
-# Copyright 2010, Promet Solutions
+# Copyright (c) 2010 Basho Technologies, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,8 +18,8 @@
 # limitations under the License.
 #
 
-default.nodejs[:version] = "0.4.6"
-default.nodejs[:dir] = "/usr/local"
-default.nodejs[:npm] = "0.3.18"
-default.nodejs.service.name = "node"
-default.nodejs.service.user = "node_service"
+include_recipe "iptables"
+
+iptables_rule "10riak" do
+  source "iptables.erb"
+end

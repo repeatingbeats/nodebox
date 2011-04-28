@@ -34,10 +34,6 @@ if not erl_installed
 	  action :install
 	end
 
-	package "openssl" do
-	  action :install
-	end
-
 	case node[:platform]
 	  when "centos","redhat","fedora"
 		package "openssl-devel"
@@ -45,6 +41,10 @@ if not erl_installed
 		package "libssl-dev"
 	end
 
+	package "openssl" do
+	  action :install
+	end
+	
 	directory "/tmp/erlang_pkg" do
 	  owner "root"
 	  mode 0755
