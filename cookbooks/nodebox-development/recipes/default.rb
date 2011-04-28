@@ -1,3 +1,6 @@
+# Use shared apt-get
+include_recipe "apt-get"
+
 # keep up to date
 apt_update = execute "update apt" do
   user "root"

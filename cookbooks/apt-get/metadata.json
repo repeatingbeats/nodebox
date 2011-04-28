@@ -1,0 +1,36 @@
+{
+    "providing": {
+    },
+    "attributes": {
+    },
+    "replacing": {
+    },
+    "dependencies": {
+    },
+    "groupings": {
+    },
+    "recommendations": {
+    },
+    "platforms": {
+      "debian": [
+
+      ],
+      "ubuntu": [
+
+      ]
+    },
+    "license": "Apache 2.0",
+    "version": "0.8.2",
+    "maintainer": "Talifun Ltd",
+    "suggestions": {
+    },
+    "recipes": {
+      "apt-get": "Sets apt-get to use a shared archive folder"
+    },
+    "maintainer_email": "taliesins@yahoo.com",
+    "name": "apt-get",
+    "conflicting": {
+    },
+    "description": "Sets apt-get to use a shared archive folder",
+    "long_description": ""
+  }
