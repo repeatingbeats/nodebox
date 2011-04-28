@@ -24,11 +24,24 @@ Vagrant::Config.run do |vgr_config|
         :port => app_port,
         :path => app_path,
       },
-	  :redis => {
-		:version => "2.2.5",
+	  :erlang => {
+		:build_tag => "R13B04",
+		:version => "5.7.5",
+	  },	  
+	  :riak => {
+		:service => {
+			:name => "riak",
+			:user => "riak_service",
+		},
+		:package => {
+			:type => "source",
+		},
 	  },
-      :node_user => "node",
       :nodejs => {
+		:service => {
+			:user => "nodejs_service",
+			:name => app_name,
+		},
         :version => nb_config['node_version'],
         :npm => nb_config['npm_version']
       },
