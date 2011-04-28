@@ -16,18 +16,18 @@ end
 
 # Setup Riak
 include_recipe "riak"
-#
+
 #user "#{node[:nodejs][:service][:user]}" do
 #  system true
 #  action :create
 #end
-#
+
 #execute "start Riak - #{node[:riak][:service][:name]}" do
 #  user "root"
 #  command "start #{node[:riak][:service][:name]}"
 #  action :nothing
 #end
-#
+
 #template "/etc/init/#{node[:riak][:service][:name]}.conf" do
 #  source "upstart.riak.conf.erb"
 #  owner "root"
@@ -35,7 +35,6 @@ include_recipe "riak"
 #  mode 0755
 #  notifies :run, resources(:execute => "start Riak - #{node[:riak][:service][:name]}")
 #end
-
 
 # no webserver! node will listen on port 80. As root! Hence, development.
 #include_recipe "nodejs"

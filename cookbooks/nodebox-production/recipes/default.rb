@@ -15,7 +15,6 @@ apt_update.run_action(:run)
   install_package.run_action(:install)
 end
 
-include_recipe "erlang"
 include_recipe "nginx"
 include_recipe "riak"
 include_recipe "nodejs"
@@ -49,7 +48,7 @@ execute "start monit" do
 end
 
 template "/etc/init/#{node[:app][:name]}.conf" do
-  source "upstart.erb"
+  source "upstart.nodejs.conf.erb"
   owner "root"
   group "root"
   mode 0755
