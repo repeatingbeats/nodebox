@@ -20,7 +20,4 @@
 default.nodejs.version = "0.4.6"
 default.nodejs.prefix = "/usr/local"
 default.nodejs.npm = "0.3.18"
-default.nodejs.service.name = "nodejs"
-default.nodejs.service.user = "nodejs_service"
-default.nodejs.service.group = "nodejs"
-default.nodejs.root_dir = default.nodejs.prefix + "/" + default.nodejs.service.name
+default.nodejs.root_dir = default.nodejs.prefix

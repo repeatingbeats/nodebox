@@ -22,33 +22,13 @@ include_recipe "riak"
 
 # no webserver! node will listen on port 80. As root! Hence, development.
 include_recipe "nodejs"
-#include_recipe "nodejs::npm"
+include_recipe "nodejs::npm"
 
 # install our required npm modules
-#node[:node_modules].each do | node_module |
-#  bash "npm install #{node_module}" do
-#    user "root"
-#    code "npm install #{node_module}"
-#    not_if "npm list installed | grep '^#{node_module}'"
-#  end
-#end
-
-# create user to run node
-#user "#{node[:nodejs][:service][:user]}" do
-#  system true
-#  action :create
-#end
-
-#execute "start NodeJS - #{node[:app][:name]}" do
-#  user "root"
-#  command "start #{node[:app][:name]}"
-#  action :nothing
-#end
-
-#template "/etc/init/#{node[:app][:name]}.conf" do
-#  source "upstart.nodejs.conf.erb"
-#  owner "root"
-#  group "root"
-#  mode 0755
-#  notifies :run, resources(:execute => "start NodeJS - #{node[:app][:name]}")
-#end
+node[:node_modules].each do | node_module |
+  bash "npm install #{node_module}" do
+    user "root"
+    code "npm install #{node_module}"
+    not_if "npm list installed | grep '^#{node_module}'"
+  end
+end

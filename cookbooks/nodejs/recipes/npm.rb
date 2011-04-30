@@ -20,17 +20,35 @@
 
 include_recipe "nodejs"
 
-package "curl"
+npm_commandline = `#{node[:nodejs][:root_dir]}/bin/npm -v 2>&1`.gsub(/\r/," ").gsub(/\n/," ")
+npm_installed = npm_commandline.include? "#{node[:nodejs][:npm]}"
 
-bash "install npm - package manager for node" do
-  cwd "/usr/local/src"
-  user "root"
-  code <<-EOH
-    mkdir -p npm-v#{node[:nodejs][:npm]} && \
-    cd npm-v#{node[:nodejs][:npm]}
-    curl -L http://registry.npmjs.org/npm/-/npm-#{node[:nodejs][:npm]}.tgz | tar xzf - --strip-components=1 && \
-    make uninstall dev
-  EOH
-  not_if {File.exists?("/usr/local/bin/npm@#{node[:nodejs][:npm]}")}
+if not npm_installed
+	package "curl"
+	
+	base_uri = "http://registry.npmjs.org/npm/-/"
+	base_filename = "npm-#{node[:nodejs][:npm]}"
+	package_file = "#{base_filename}.tgz"
+	
+	directory "/tmp/nodejs_npm_pkg" do
+		owner "root"
+		action :create
+		mode 0755
+	end
+	
+	remote_file "/tmp/nodejs_npm_pkg/#{package_file}" do
+		source base_uri + package_file
+		owner "root"
+		mode 0644
+	end
+	
+	execute "nodejs-src-unpack" do
+		cwd "/tmp/nodejs_npm_pkg"
+		command "sudo tar xvfz #{package_file}"
+	end
+
+	execute "nodejs_npm-src-make-install" do
+		cwd "/tmp/nodejs_npm_pkg/package"
+		command "sudo make install"
+	end
 end
-

@@ -17,8 +17,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-nodejs_installed = `#{node[:nodejs][:root_dir]}/bin/node -v 2>&1`.include? "v#{node[:nodejs][:version]}"
+nodejs_commandline = `#{node[:nodejs][:root_dir]}/bin/node -v 2>&1`
+nodejs_installed = nodejs_commandline.include? "v#{node[:nodejs][:version]}"
 
 if not nodejs_installed
 	include_recipe "build-essential"
@@ -33,15 +33,6 @@ if not nodejs_installed
 	base_uri = "http://nodejs.org/dist/"
 	base_filename = "node-v#{node[:nodejs][:version]}"
 	package_file = "#{base_filename}.tar.gz"
-
-	group "#{node[:nodejs][:service][:group]}"
-
-	user "#{node[:nodejs][:service][:user]}" do
-		gid "#{node[:nodejs][:service][:group]}"
-		shell "/bin/bash"
-		home "#{node[:nodejs][:root_dir]}"
-		system true
-	end
 
 	directory "/tmp/nodejs_pkg" do
 		owner "root"
@@ -73,10 +64,5 @@ if not nodejs_installed
 	execute "nodejs-src-make-install" do
 		cwd "/tmp/nodejs_pkg/#{base_filename}"
 		command "make install"
-	end
-	
-	execute "nodejs-src-file-permissions" do
-		command "sudo chown -R #{node[:nodejs][:service][:user]}:#{node[:nodejs][:service][:group]} #{node[:nodejs][:root_dir]}"
-		only_if {File.directory?("#{node[:nodejs][:root_dir]}") }
 	end
 end
