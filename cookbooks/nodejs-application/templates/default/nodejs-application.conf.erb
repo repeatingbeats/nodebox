@@ -8,5 +8,6 @@ stop on shutdown
 script
   sudo touch /var/log/<%= node[:app][:service][:name] %>.log
   sudo chown <%= node[:app][:service][:user] %> /var/log/<%= node[:app][:service][:name] %>.log
+  sudo chown -R <%= node[:app][:service][:user] %> <%= node[:app][:path] %>
   exec sudo -u <%= node[:app][:service][:user] %> <%= node[:nodejs][:root_dir] %>/bin/node <%= node[:app][:path] %>/server.js >> /var/log/<%= node[:app][:service][:name] %>.log 2>&1
 end script
