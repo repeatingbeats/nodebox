@@ -26,7 +26,7 @@ Vagrant::Config.run do |vgr_config|
 				:service => {
 					:type => "supervisor",
 					:name => app_name,
-					:user => "nodejs",
+					:user => "vagrant",
 				},
 			},
 			:erlang => {

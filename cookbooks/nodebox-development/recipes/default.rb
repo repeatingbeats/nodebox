@@ -33,4 +33,6 @@ node[:node_modules].each do | node_module |
   end
 end
 
+include_recipe "rabbitmq"
+
 include_recipe "nodejs-application"
