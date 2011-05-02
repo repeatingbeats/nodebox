@@ -11,7 +11,7 @@ recipe = "nodebox-#{nodebox_env}"
 
 Vagrant::Config.run do |vgr_config|
 
-  vgr_config.vm.box = "ubuntu-maverick-64-talifun"
+  vgr_config.vm.box = "talifun-ubuntu-11.04-server-amd64"
   vgr_config.vm.forward_port "web", web_server_port, nb_config['host_port']
   vgr_config.vm.share_folder(app_name, app_path, "./../")
 
@@ -23,6 +23,11 @@ Vagrant::Config.run do |vgr_config|
         :name => app_name,
         :port => app_port,
         :path => app_path,
+		:service => {
+			:type => "supervisor",
+			:name => app_name,
+			:user => "nodejs",
+		},
       },
 	  :erlang => {
 		:build_tag => "R13B04",
@@ -38,10 +43,6 @@ Vagrant::Config.run do |vgr_config|
 		},
 	  },
       :nodejs => {
-		:service => {
-			:user => "nodejs_service",
-			:name => app_name,
-		},
         :version => nb_config['node_version'],
         :npm => nb_config['npm_version']
       },

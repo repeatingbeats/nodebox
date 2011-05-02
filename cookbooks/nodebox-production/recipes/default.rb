@@ -30,38 +30,3 @@ node[:node_modules].each do | node_module |
     not_if "npm list installed | grep '^#{node_module}'"
   end
 end
-
-# create user to run node
-user "#{node[:node_user]}" do
-  system true
-  action :create
-end
-
-execute "start upstart" do
-  user "root"
-  command "start #{node[:app][:name]}"
-  action :nothing
-end
-
-execute "start monit" do
-  user "root"
-  command "monit -d 60 -c /etc/monit/monitrc"
-  action :nothing
-end
-
-template "/etc/init/#{node[:app][:name]}.conf" do
-  source "upstart.nodejs.conf.erb"
-  owner "root"
-  group "root"
-  mode 0755
-  notifies :run, resources(:execute => "start upstart")
-end
-
-template "/etc/monit/monitrc" do
-  source "monit.erb"
-  owner "root"
-  group "root"
-  mode 0700
-  notifies :run, resources(:execute => "start monit")
-end
-

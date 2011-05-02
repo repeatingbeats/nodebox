@@ -32,3 +32,5 @@ node[:node_modules].each do | node_module |
     not_if "npm list installed | grep '^#{node_module}'"
   end
 end
+
+include_recipe "nodejs-application"
