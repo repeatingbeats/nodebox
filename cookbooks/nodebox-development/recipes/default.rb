@@ -20,6 +20,8 @@ end
 # Setup Riak
 include_recipe "riak"
 
+#include_recipe "rabbitmq"
+
 # no webserver! node will listen on port 80. As root! Hence, development.
 include_recipe "nodejs"
 include_recipe "nodejs::npm"
@@ -33,6 +35,7 @@ node[:node_modules].each do | node_module |
   end
 end
 
-include_recipe "rabbitmq"
-
 include_recipe "nodejs-application"
+
+
+
