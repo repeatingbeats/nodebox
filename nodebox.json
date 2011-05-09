@@ -1,0 +1,17 @@
+{
+	"app_name": "web",
+	"environment": "development",
+	"app_port": 8080,
+	"host_port": 8001,
+	"modules": [ 
+				"connect",
+				"express", 
+				"riak-js", 
+				"ejs",
+				"less",
+				"cucumis",
+				"vows",				
+				"kyuri",
+				"zombie"
+				]
+}
