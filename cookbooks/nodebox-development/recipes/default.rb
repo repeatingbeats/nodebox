@@ -9,8 +9,8 @@ apt_update = execute "update apt" do
 end
 apt_update.run_action(:run)
 
-# we don't actually need all these. I just like to have them.
-%w{vim curl man-db git-core}.each do | pkg |
+# install our required packages modules
+node[:node_packages].each do | pkg |
   install_package = package pkg do
     action :nothing
   end

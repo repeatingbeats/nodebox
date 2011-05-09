@@ -3,6 +3,12 @@
 	"environment": "development",
 	"app_port": 8080,
 	"host_port": 8001,
+	"packages": [
+					"vim",
+					"curl",
+					"man-db",
+					"git-core"
+				],
 	"modules": [ 
 				"connect",
 				"express", 

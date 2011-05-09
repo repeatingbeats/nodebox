@@ -1,4 +1,4 @@
-bash "Create a shared symbolic link apt-get archive" do
+apt_get_archive = bash "Create a shared symbolic link apt-get archive" do
 	user "root"
 	cwd "/tmp"
 	code <<-EOH
@@ -14,3 +14,5 @@ bash "Create a shared symbolic link apt-get archive" do
 	exit 0
 	EOH
 end
+
+apt_get_archive.run_action(:run)
