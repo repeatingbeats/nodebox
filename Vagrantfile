@@ -3,6 +3,7 @@ nb_config = JSON.parse(File.read('./nodebox.json'))
 nodebox_env = nb_config['environment']
 required_modules = (nodebox_env == 'development') ? [ "supervisor" ] : []
 app_modules = nb_config['modules'] && nb_config['modules'].concat(required_modules) || required_modules
+app_packages = nb_config['packages']
 app_name = nb_config['app_name']
 app_path = "/var/www/#{app_name}"
 app_port = nb_config['app_port'] || 8080
@@ -46,6 +47,7 @@ Vagrant::Config.run do |vgr_config|
 					:version => "0.4.7",
 					:npm => "0.3.18"
 				},
+				:node_packages => app_packages,
 				:node_modules => app_modules
 			});
 		end
