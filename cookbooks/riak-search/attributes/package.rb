@@ -1,6 +1,6 @@
 #
 # Author:: Benjamin Black (<b@b3k.us>) and Sean Cribbs (<sean@basho.com>)
-# Cookbook Name:: riak
+# Cookbook Name:: riak-search
 #
 # Copyright (c) 2010 Basho Technologies, Inc.
 #
@@ -17,16 +17,13 @@
 # limitations under the License.
 #
 
-default.riak.package[:type] = "binary"
-default.riak.package.version.major = "0"
-default.riak.package.version.minor = "14"
-default.riak.package.version.incremental = "2"
-default.riak.package.version.build = "2-1"
-default.riak.package.source_checksum = '2fa57ae065c6f29648b30d2df0a8fc8372305a62859dec492232d366236ad6c5'
-default.riak.package.config_dir = "/etc/riak"
-if (node[:riak][:package][:type]).eql?("source")
-	default.riak.package.prefix = "/usr/local"
-	default.riak.package.root_dir = "#{default.riak.package.prefix}"
-	default.riak.package.config_dir = "#{default.riak.package.root_dir}/etc"
+default.riak_search.package[:type] = "binary"
+default.riak_search.package.version.major = "0"
+default.riak_search.package.version.minor = "14"
+default.riak_search.package.version.incremental = "2"
+default.riak_search.package.version.build = "2-1"
+if (node[:riak_search][:package][:type]).eql?("source")
+	default.riak_search.package.prefix = "/usr/local"
+	default.riak_search.package.root_dir = "#{default.riak_search.package.prefix}"
 end
 
