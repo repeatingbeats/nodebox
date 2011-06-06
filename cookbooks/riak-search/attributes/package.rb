@@ -21,7 +21,7 @@ default.riak_search.package[:type] = "binary"
 default.riak_search.package.version.major = "0"
 default.riak_search.package.version.minor = "14"
 default.riak_search.package.version.incremental = "2"
-default.riak_search.package.version.build = "2-1"
+default.riak_search.package.version.build = "1"
 if (node[:riak_search][:package][:type]).eql?("source")
 	default.riak_search.package.prefix = "/usr/local"
 	default.riak_search.package.root_dir = "#{default.riak_search.package.prefix}"

@@ -41,12 +41,12 @@ Vagrant::Config.run do |vgr_config|
 						:user => "riak_service",
 					},
 					:package => {
-						:type => "source",
+						:type => "binary",
 					},
 				},
 				:riak_search => {
 					:package => {
-						:type => "source",
+						:type => "binary",
 					},
 				},
 				:nodejs => {

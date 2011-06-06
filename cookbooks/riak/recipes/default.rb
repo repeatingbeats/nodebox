@@ -18,9 +18,9 @@
 # limitations under the License.
 #
 if node[:riak][:package][:type].eql?("source")
-	riak_installed = File.directory?("#{node[:riak][:package][:root_dir]}")
+	riak_installed = FileTest.exists?("#{node[:riak][:package][:root_dir]}/bin/riak")
 else
-	riak_installed = false
+	riak_installed = true
 end
 
 if not riak_installed
@@ -72,7 +72,7 @@ if not riak_installed
 					when "binary"
 					  case node[:platform]
 					  when "debian","ubuntu"
-						include_recipe "riak::iptables"
+						#include_recipe "riak::iptables"
 						"#{base_filename.gsub(/\-/, '_')}-#{node[:riak][:package][:version][:build]}_#{machines[node[:kernel][:machine]]}.deb"
 					  when "centos","redhat","suse"
 						"#{base_filename}-#{node[:riak][:package][:version][:build]}.el5.#{machines[node[:kernel][:machine]]}.rpm"

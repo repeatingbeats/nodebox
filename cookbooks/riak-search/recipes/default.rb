@@ -18,7 +18,7 @@
 # limitations under the License.
 #
 if node[:riak_search][:package][:type].eql?("source")
-	riak_search_installed = File.directory?("#{node[:riak_search][:package][:root_dir]}")
+	riak_search_installed = FileTest.exists?("#{node[:riak_search][:package][:root_dir]}/bin/riaksearch")
 else
 	riak_search_installed = false
 end
@@ -36,7 +36,7 @@ if not riak_search_installed
 						end
 					  case node[:platform]
 					  when "debian","ubuntu"
-						"#{base_filename.gsub(/\-/, '_')}-#{node[:riak_search][:package][:version][:build]}_#{machines[node[:kernel][:machine]]}.deb"
+						"#{base_filename.gsub(/\-/, '_').sub( 'riak_search', 'riak-search' )}-#{node[:riak_search][:package][:version][:build]}_#{machines[node[:kernel][:machine]]}.deb"
 					  when "centos","redhat","suse"
 						"#{base_filename}-#{node[:riak_search][:package][:version][:build]}.el5.#{machines[node[:kernel][:machine]]}.rpm"
 					  when "fedora"
@@ -81,7 +81,7 @@ if not riak_search_installed
 
 	case node[:riak_search][:package][:type]
 	when "binary"
-	  package "riak" do
+	  package "riak-search" do
 		source "/tmp/riak_search_pkg/#{package_file}"
 		action :install
 		provider value_for_platform(
