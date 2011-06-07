@@ -17,11 +17,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-if node[:riak][:package][:type].eql?("source")
-	riak_installed = FileTest.exists?("#{node[:riak][:package][:root_dir]}/bin/riak")
-else
-	riak_installed = true
-end
+
+riak_installed = FileTest.exists?("#{node[:riak][:package][:bin_dir]}/riak")
 
 if not riak_installed
 	if node[:riak][:package][:type].eql?("source")
@@ -171,14 +168,12 @@ if not riak_installed
 	  only_if {node[:riak][:package][:type].eql?("source")}
 	end
 
-
 	service "riak" do
 		action [ :enable ]
 		supports :start => true, :stop => true, :reload => true
 		subscribes :reload, resources(:template => [ "#{node[:riak][:package][:config_dir]}/app.config",
 												  "#{node[:riak][:package][:config_dir]}/vm.args" ])
 	end
-
 end
 
 

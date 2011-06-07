@@ -22,8 +22,12 @@ default.riak_search.package.version.major = "0"
 default.riak_search.package.version.minor = "14"
 default.riak_search.package.version.incremental = "2"
 default.riak_search.package.version.build = "1"
+default.riak_search.package.config_dir = "/etc/riaksearch"
+default.riak_search.package.bin_dir = "/usr/sbin"
 if (node[:riak_search][:package][:type]).eql?("source")
 	default.riak_search.package.prefix = "/usr/local"
 	default.riak_search.package.root_dir = "#{default.riak_search.package.prefix}"
+	default.riak_search.package.config_dir = "#{default.riak_search.package.root_dir}/etc"
+	default.riak_search.package.bin_dir = "#{default.riak_search.package.root_dir}/bin"
 end
 

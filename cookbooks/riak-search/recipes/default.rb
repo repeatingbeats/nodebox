@@ -17,11 +17,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-if node[:riak_search][:package][:type].eql?("source")
-	riak_search_installed = FileTest.exists?("#{node[:riak_search][:package][:root_dir]}/bin/riaksearch")
-else
-	riak_search_installed = false
-end
+
+riak_search_installed = FileTest.exists?("#{node[:riak_search][:package][:bin_dir]}/riaksearch")
 
 if not riak_search_installed
 	version_str = "#{node[:riak_search][:package][:version][:major]}.#{node[:riak_search][:package][:version][:minor]}"
@@ -115,10 +112,43 @@ if not riak_search_installed
 		command "sudo mv /tmp/riak_search_pkg/#{base_filename}/rel/riaksearch/* #{node[:riak_search][:package][:root_dir]}"
 	  end
 	  
-#	  execute "riak-search-src-file-permissions" do
-#		command "sudo chown -R #{node[:riak_search][:service][:user]}:#{node[:riak_search][:service][:group]} #{node[:riak_search][:package][:root_dir]}"
-#		only_if {File.directory?("#{node[:riak_search][:package][:root_dir]}") }
-#	  end
+	  execute "riak-search-src-file-permissions" do
+		command "sudo chown -R #{node[:riak_search][:service][:user]}:#{node[:riak_search][:service][:group]} #{node[:riak_search][:package][:root_dir]}"
+		only_if {File.directory?("#{node[:riak_search][:package][:root_dir]}") }
+	  end
+	end
+	
+	directory node[:riak_search][:package][:config_dir] do
+	  owner "#{node[:riak_search][:service][:user]}"
+	  mode "0755"
+	  action :create
+	end	
+	
+	template "#{node[:riak_search][:package][:config_dir]}/app.config" do
+	  source "app.config.erb"
+	  owner "#{node[:riak_search][:service][:user]}"
+	  mode 0644
+	end
+
+	template "#{node[:riak_search][:package][:config_dir]}/vm.args" do
+	  variables :switches => prepare_vm_args(node[:riak_search][:erlang])
+	  source "vm.args.erb"
+	  owner "#{node[:riak_search][:service][:user]}"
+	  mode 0644
+	end
+	
+	template "/etc/init.d/riaksearch" do
+	  source "riaksearch_init.erb"
+	  owner "root"
+	  mode 0755
+	  only_if {node[:riak_search][:package][:type].eql?("source")}
+	end
+
+	service "riaksearch" do
+		action [ :enable ]
+		supports :start => true, :stop => true, :reload => true
+		subscribes :reload, resources(:template => [ "#{node[:riak][:package][:config_dir]}/app.config",
+												  "#{node[:riak][:package][:config_dir]}/vm.args" ])
 	end
 end
 

@@ -1,6 +1,6 @@
 #
-# Author:: Taliesin Sisson (<taliesins@yahoo.com>)
-# Cookbook Name:: riak-search
+# Author:: Benjamin Black (<b@b3k.us>) and Sean Cribbs (<sean@basho.com>)
+# Cookbook Name:: riak
 #
 # Copyright (c) 2010 Basho Technologies, Inc.
 #
@@ -17,16 +17,12 @@
 # limitations under the License.
 #
 
-include_attribute "riak-search::service"
-include_attribute "riak-search::package"
-include_attribute "riak-search::core"
-include_attribute "riak-search::erlang"
-include_attribute "riak-search::kv"
-include_attribute "riak-search::sasl"
-include_attribute "riak-search::err"
-include_attribute "riak-search::luwak"
+include_attribute "riak::core"
 
-include_attribute "riak-search::merge_index"
-include_attribute "riak-search::qilr"
-include_attribute "riak-search::riak_search"
-include_attribute "riak-search::riak_solr"
+default.riak_search.erlang.node_name = "#{default.riak_search.service.name}@#{default.riak_search.core.http[0][0]}"
+default.riak_search.erlang.cookie = "riak"
+default.riak_search.erlang.kernel_polling = true
+default.riak_search.erlang.async_threads = 64
+default.riak_search.erlang.smp = "enable"
+default.riak_search.erlang.env_vars.ERL_MAX_PORTS = 4096
+default.riak_search.erlang.env_vars.ERL_FULLSWEEP_AFTER = 0

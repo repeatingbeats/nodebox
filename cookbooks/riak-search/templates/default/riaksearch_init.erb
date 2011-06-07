@@ -5,8 +5,8 @@
 # chkconfig: 2345 80 30
 # description: Riak is a distrubuted data store.
 # processname: beam
-# config: <%= node[:riak][:package][:config_dir] %>/app.config
-# config: <%= node[:riak][:package][:config_dir] %>/vm.args
+# config: <%= node[:riak_search][:package][:config_dir] %>/app.config
+# config: <%= node[:riak_search][:package][:config_dir] %>/vm.args
 #
 
 # Source function library.
@@ -14,15 +14,15 @@
 . /lib/lsb/init-functions
 
 #check for script,config, and data dirs
-[ -x <%= node[:riak][:package][:bin_dir] %> ] || exit 0
-[ -d <%= node[:riak][:package][:config_dir] %>  ] || exit 0
+[ -x <%= node[:riak_search][:package][:bin_dir] %> ] || exit 0
+[ -d <%= node[:riak_search][:package][:config_dir] %>  ] || exit 0
 
 RETVAL=0
 
 PATH=<%= node[:riak_search][:package][:bin_dir] %>:sbin:/usr/sbin:/bin:/usr/bin
 DESC="a distributed key value store"
-NAME=riak
-DAEMON=<%= node[:riak][:package][:bin_dir] %>/$NAME
+NAME=riaksearch
+DAEMON=<%= node[:riak_search][:package][:bin_dir] %>/$NAME
 
 start() {
 	#Check if Riak is running
@@ -34,7 +34,7 @@ start() {
 
 	# Start daemons.
 	echo -e $"Starting $NAME: "
-	su - <%= node[:riak][:service][:user] %> -c "$DAEMON start"
+	su - <%= node[:riak_search][:service][:user] %> -c "$DAEMON start"
 	RETVAL=$?
 	
 	if [ $RETVAL -eq 0 ]; then
@@ -52,7 +52,7 @@ stop() {
 	RETVAL=`$DAEMON ping`
 	
 	if [ "$RETVAL" = "pong" ]; then
-		su - <%= node[:riak][:service][:user] %> -c "$DAEMON stop 2>/dev/null 1>&2"
+		su - <%= node[:riak_search][:service][:user] %> -c "$DAEMON stop 2>/dev/null 1>&2"
 	fi
 	sleep 2
 	RETVAL=`pidof beam.smp`
@@ -78,7 +78,7 @@ reload() {
 	echo -e $"Reloading $NAME: "
 	RETVAL=`$DAEMON ping`
 	if [ "$RETVAL" = "pong" ]; then
-		su - <%= node[:riak][:service][:user] %> -c "$DAEMON restart 2>/dev/null 1>&2" 
+		su - <%= node[:riak_search][:service][:user] %> -c "$DAEMON restart 2>/dev/null 1>&2" 
 		RETVAL=$?
 		
 		if [ $RETVAL -eq 0 ]; then

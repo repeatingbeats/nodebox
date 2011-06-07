@@ -1,8 +1,8 @@
 #
 # Author:: Taliesin Sisson (<taliesins@yahoo.com>)
-# Cookbook Name:: riak-search
+# Cookbook Name:: riaksearch
 #
-# Copyright (c) 2010 Basho Technologies, Inc.
+# Copyright (c) 2011 Talifun Ltd.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,16 +17,6 @@
 # limitations under the License.
 #
 
-include_attribute "riak-search::service"
-include_attribute "riak-search::package"
-include_attribute "riak-search::core"
-include_attribute "riak-search::erlang"
-include_attribute "riak-search::kv"
-include_attribute "riak-search::sasl"
-include_attribute "riak-search::err"
-include_attribute "riak-search::luwak"
-
-include_attribute "riak-search::merge_index"
-include_attribute "riak-search::qilr"
-include_attribute "riak-search::riak_search"
-include_attribute "riak-search::riak_solr"
+default.riak_search.riak_search.search_backend = :merge_index_backend
+default.riak_search.riak_search.java_home = "/usr"
+default.riak_search.riak_search.max_search_results = 100000
