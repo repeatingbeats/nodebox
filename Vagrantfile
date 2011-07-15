@@ -50,8 +50,8 @@ Vagrant::Config.run do |vgr_config|
 					},
 				},
 				:nodejs => {
-					:version => "0.4.7",
-					:npm => "0.3.18"
+					:version => "0.4.9",
+					:npm => "1.0.15",
 				},
 				:packages => app_packages,
 				:node_modules => app_modules

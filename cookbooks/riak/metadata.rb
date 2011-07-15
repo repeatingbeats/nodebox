@@ -21,7 +21,7 @@ maintainer        "Basho Technologies, Inc."
 maintainer_email  "riak@basho.com"
 license           "Apache 2.0"
 description       "Installs and configures Riak distributed data store (v0.14 and later)"
-version           "0.14.0"
+version           "0.14.2"
 recipe            "riak", "Installs Riak"
 recipe            "riak::autoconf", "Automatically configure nodes from chef-server information."
 recipe            "riak::innostore", "Install and configure the Innostore backend."
@@ -59,7 +59,7 @@ attribute "riak/package/version/minor",
 attribute "riak/package/version/incremental",
   :display_name => "Riak incremental version",
   :description => "Incremental release of Riak to install.",
-  :default => "0"
+  :default => "2"
   
 attribute "riak/package/version/build",
   :display_name => "Riak binary package build version",
