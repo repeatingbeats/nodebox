@@ -9,7 +9,8 @@
 					"man-db",
 					"git-core"
 				],
-	"modules": [ 
+	"modules": [
+				"cluster",
 				"connect",
 				"express", 
 				"riak-js", 

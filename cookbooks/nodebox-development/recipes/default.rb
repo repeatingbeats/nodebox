@@ -29,10 +29,10 @@ include_recipe "nodejs::npm"
 
 # install our required npm modules
 node[:node_modules].each do | node_module |
-  bash "npm install #{node_module}" do
-    user "root"
-    code "npm install #{node_module}"
-    not_if "npm list installed | grep '^#{node_module}'"
+  node_module_version = '@'
+  execute "npm install #{node_module}" do
+    command  "sudo npm_g install #{node_module} | grep '#{node_module}#{node_module_version}'"
+    not_if "sudo npm_g ls | grep ' #{node_module}#{node_module_version}'"
   end
 end
 
