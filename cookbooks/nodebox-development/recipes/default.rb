@@ -21,7 +21,7 @@ end
 include_recipe "riak"
 include_recipe "riak-search"
 
-#include_recipe "rabbitmq"
+include_recipe "rabbitmq"
 
 # no webserver! node will listen on port 80. As root! Hence, development.
 include_recipe "nodejs"

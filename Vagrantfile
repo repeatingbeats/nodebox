@@ -34,7 +34,10 @@ Vagrant::Config.run do |vgr_config|
 				:erlang => {
 					:build_tag => "R13B04",
 					:version => "5.7.5",
-				},	  
+				},
+				:rabbitmq => {
+					:erlang_cookie => "vXyIQytPfQlTjrTMjnx2uQ==",
+				},
 				:riak => {
 					:service => {
 						:name => "riak",
@@ -50,7 +53,7 @@ Vagrant::Config.run do |vgr_config|
 					},
 				},
 				:nodejs => {
-					:version => "0.4.9",
+					:version => "0.4.10",
 					:npm => "1.0.15",
 				},
 				:packages => app_packages,
