@@ -9,12 +9,19 @@ app_name = nb_config['app_name']
 app_path = "/var/www/#{app_name}"
 app_port = nb_config['app_port'] || 8080
 web_server_port = (nodebox_env == 'production') ? 80 : app_port
+debugger_server_port = 5858
+inspector_server_port = 3001
+riak_browser_server_port = 8098
 recipe = "nodebox-#{nodebox_env}"
 
 Vagrant::Config.run do |vgr_config|
 	vgr_config.vm.define :web do |web_config|
 		web_config.vm.box = "talifun-ubuntu-11.04-server-amd64"
 		web_config.vm.forward_port "web", web_server_port, nb_config['host_port']
+    web_config.vm.forward_port "inspector", inspector_server_port, nb_config['inspector_port'] unless nodebox_env == 'production'
+    web_config.vm.forward_port "debugger", debugger_server_port, nb_config['debugger_port'] unless nodebox_env == 'production'
+    web_config.vm.forward_port "riak-browser", riak_browser_server_port, nb_config['riak_browser_port'] unless nodebox_env == 'production'
+
 		web_config.vm.share_folder(app_name, app_path, "./../#{app_name}/")
 
 		web_config.vm.provision :chef_solo do | chef |
@@ -53,8 +60,8 @@ Vagrant::Config.run do |vgr_config|
 					},
 				},
 				:nodejs => {
-					:version => "0.4.10",
-					:npm => "1.0.15",
+					:version => "0.4.11",
+					:npm => "1.0.26",
 				},
 				:packages => app_packages,
 				:node_modules => app_modules

@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-default.nodejs.version = "0.4.9"
+default.nodejs.version = "0.4.11"
 default.nodejs.prefix = "/usr/local"
-default.nodejs.npm = "1.0.15"
+default.nodejs.npm = "1.0.26"
 default.nodejs.root_dir = default.nodejs.prefix
