@@ -19,23 +19,27 @@
 # limitations under the License.
 #
 
-include_recipe "build-essential"
+zeromq_installed = File.exists?("#{node[:zeromq][:install_dir]}/lib/libzmq.so")
 
-zeromq_tar_gz = "/tmp/zeromq-#{node[:zeromq][:src_version]}.tar.gz"
+if not zeromq_installed
+  include_recipe "build-essential"
 
-remote_file zeromq_tar_gz do
-  source node[:zeromq][:src_mirror]
-end
+  zeromq_tar_gz = "/tmp/zeromq-#{node[:zeromq][:src_version]}.tar.gz"
 
-package "uuid-dev" do
-  action :upgrade
-end
+  remote_file zeromq_tar_gz do
+    source node[:zeromq][:src_mirror]
+  end
 
-bash "install zeromq #{node[:zeromq][:src_version]}" do
-  cwd "/tmp"
-  code <<-EOH
-    tar -zxf #{zeromq_tar_gz}
-    cd zeromq-#{node[:zeromq][:src_version]} && ./configure --prefix=#{node[:zeromq][:install_dir]} && make && make install
-  EOH
-  not_if { ::FileTest.exists?("#{node[:zeromq][:install_dir]}/lib/libzmq.so") }
+  package "uuid-dev" do
+    action :upgrade
+  end
+
+  bash "install zeromq #{node[:zeromq][:src_version]}" do
+    cwd "/tmp"
+    code <<-EOH
+      tar -zxf #{zeromq_tar_gz}
+      cd zeromq-#{node[:zeromq][:src_version]} && ./configure --prefix=#{node[:zeromq][:install_dir]} && make && make install
+    EOH
+
+  end
 end
