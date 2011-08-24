@@ -17,11 +17,10 @@ apt_update.run_action(:run)
   install_package.run_action(:install)
 end
 
-include_recipe "nginx"
-include_recipe "riak"
-include_recipe "riak-search"
+include_recipe "zeromq"
 
-include_recipe "rabbitmq"
+include_recipe "nginx"
+# include_recipe "riak-search"
 
 include_recipe "nodejs"
 include_recipe "nodejs::npm"

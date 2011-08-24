@@ -42,9 +42,6 @@ Vagrant::Config.run do |vgr_config|
 					:build_tag => "R13B04",
 					:version => "5.7.5",
 				},
-				:rabbitmq => {
-					:erlang_cookie => "vXyIQytPfQlTjrTMjnx2uQ==",
-				},
 				:riak => {
 					:service => {
 						:name => "riak",
@@ -63,6 +60,9 @@ Vagrant::Config.run do |vgr_config|
 					:version => "0.4.11",
 					:npm => "1.0.26",
 				},
+        :zeromq => {
+          :src_version => "2.1.7"
+        },
 				:packages => app_packages,
 				:node_modules => app_modules
 			});

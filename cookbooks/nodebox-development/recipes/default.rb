@@ -17,11 +17,10 @@ node[:packages].each do | pkg |
   install_package.run_action(:install)
 end
 
-# Setup Riak
-include_recipe "riak"
-include_recipe "riak-search"
+include_recipe "zeromq"
 
-include_recipe "rabbitmq"
+# Setup Riak
+# include_recipe "riak-search"
 
 # no webserver! node will listen on port 80. As root! Hence, development.
 include_recipe "nodejs"
