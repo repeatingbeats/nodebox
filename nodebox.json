@@ -1,0 +1,35 @@
+{
+	"app_name": "web",
+	"environment": "development",
+	"app_port": 8080,
+    "host_port": 3000,
+    "debugger_port": 5858,
+    "inspector_port": 3001,
+    "riak_browser_port": 8098,
+	"packages": [
+					"vim",
+					"curl",
+					"man-db",
+					"git-core"
+				],
+	"modules": [
+				"coffee-script",
+				"cluster",
+				"log",
+                "node-inspector",
+                "v8-profiler",
+				"connect",
+				"express", 
+				"express-resource", 
+				"riak-js", 
+				"amqp",
+				"ejs",
+				"ejs-ext",
+				"less",
+				"cucumis",
+				"vows",				
+				"kyuri",
+				"zombie",
+                "sinon"
+				]
+}

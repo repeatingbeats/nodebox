@@ -1,0 +1,36 @@
+{
+    "providing": {
+    },
+    "attributes": {
+    },
+    "replacing": {
+    },
+    "dependencies": {
+    },
+    "groupings": {
+    },
+    "recommendations": {
+    },
+    "platforms": {
+      "debian": [
+
+      ],
+      "ubuntu": [
+
+      ]
+    },
+    "license": "Apache 2.0",
+    "version": "0.8.2",
+    "maintainer": "Talifun Ltd",
+    "suggestions": {
+    },
+    "recipes": {
+      "riak-search": "Setup riak-search"
+    },
+    "maintainer_email": "taliesins@yahoo.com",
+    "name": "riak-search",
+    "conflicting": {
+    },
+    "description": "Setup riak-search",
+    "long_description": ""
+  }

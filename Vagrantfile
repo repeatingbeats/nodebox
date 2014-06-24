@@ -1,35 +1,71 @@
-nb_config = JSON.parse(File.read('../nodebox.json'))
+nb_config = JSON.parse(File.read('./nodebox.json'))
 
 nodebox_env = nb_config['environment']
+required_packages = (nodebox_env == 'development') ? [] : []
+app_packages = nb_config['packages'] && nb_config['packages'].concat(required_packages) || required_packages
 required_modules = (nodebox_env == 'development') ? [ "supervisor" ] : []
 app_modules = nb_config['modules'] && nb_config['modules'].concat(required_modules) || required_modules
 app_name = nb_config['app_name']
 app_path = "/var/www/#{app_name}"
-app_port = (nodebox_env == 'development') ? 80 : nb_config['app_port'] || 8080
+app_port = nb_config['app_port'] || 8080
+web_server_port = (nodebox_env == 'production') ? 80 : app_port
+debugger_server_port = 5858
+inspector_server_port = 3001
+riak_browser_server_port = 8098
 recipe = "nodebox-#{nodebox_env}"
 
 Vagrant::Config.run do |vgr_config|
+	vgr_config.vm.define :web do |web_config|
+		web_config.vm.box = "talifun-ubuntu-11.04-server-amd64"
+		web_config.vm.forward_port "web", web_server_port, nb_config['host_port']
+    web_config.vm.forward_port "inspector", inspector_server_port, nb_config['inspector_port'] unless nodebox_env == 'production'
+    web_config.vm.forward_port "debugger", debugger_server_port, nb_config['debugger_port'] unless nodebox_env == 'production'
+    web_config.vm.forward_port "riak-browser", riak_browser_server_port, nb_config['riak_browser_port'] unless nodebox_env == 'production'
 
-  vgr_config.vm.box = "ubuntu-lucid-32"
-  vgr_config.vm.forward_port "web", 80, nb_config['host_port']
-  vgr_config.vm.share_folder(app_name, app_path, "./../")
+		web_config.vm.share_folder(app_name, app_path, "./../#{app_name}/")
 
-  vgr_config.vm.provision :chef_solo do | chef |
-    chef.cookbooks_path = [ "cookbooks", "site-cookbooks" ]
-    chef.add_recipe(recipe)
-    chef.json.merge!({
-      :app => {
-        :name => app_name,
-        :port => app_port,
-        :path => app_path,
-      },
-      :node_user => "node",
-      :nodejs => {
-        :version => nb_config['node_version'],
-        :npm => nb_config['npm_version']
-      },
-      :node_modules => app_modules
-    });
-  end
+		web_config.vm.provision :chef_solo do | chef |
+			chef.cookbooks_path = [ "cookbooks", "site-cookbooks" ]
+			chef.add_recipe(recipe)
+			chef.json.merge!({
+				:app => {
+					:name => app_name,
+					:port => app_port,
+					:path => app_path,
+					:service => {
+						:type => "supervisor",
+						:name => "#{app_name}_service",
+						:user => app_name,
+					},
+				},
+				:erlang => {
+					:build_tag => "R13B04",
+					:version => "5.7.5",
+				},
+				:riak => {
+					:service => {
+						:name => "riak",
+						:user => "riak_service",
+					},
+					:package => {
+						:type => "binary",
+					},
+				},
+				:riak_search => {
+					:package => {
+						:type => "binary",
+					},
+				},
+				:nodejs => {
+					:version => "0.4.11",
+					:npm => "1.0.26",
+				},
+        :zeromq => {
+          :src_version => "2.1.7"
+        },
+				:packages => app_packages,
+				:node_modules => app_modules
+			});
+		end
+	end
 end
-

@@ -1,0 +1,36 @@
+{
+    "providing": {
+    },
+    "attributes": {
+    },
+    "replacing": {
+    },
+    "dependencies": {
+    },
+    "groupings": {
+    },
+    "recommendations": {
+    },
+    "platforms": {
+      "debian": [
+
+      ],
+      "ubuntu": [
+
+      ]
+    },
+    "license": "Apache 2.0",
+    "version": "0.8.2",
+    "maintainer": "Talifun Ltd",
+    "suggestions": {
+    },
+    "recipes": {
+      "application": "Installs nodejs application as a service"
+    },
+    "maintainer_email": "cookbooks@opscode.com",
+    "name": "application",
+    "conflicting": {
+    },
+    "description": "Installs nodejs application as a service",
+    "long_description": ""
+  }

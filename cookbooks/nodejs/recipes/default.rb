@@ -17,27 +17,52 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+nodejs_commandline = `#{node[:nodejs][:root_dir]}/bin/node -v 2>&1`
+nodejs_installed = nodejs_commandline.include? "v#{node[:nodejs][:version]}"
 
-include_recipe "build-essential"
+if not nodejs_installed
+	include_recipe "build-essential"
 
-case node[:platform]
-  when "centos","redhat","fedora"
-    package "openssl-devel"
-  when "debian","ubuntu"
-    package "libssl-dev"
+	case node[:platform]
+	  when "centos","redhat","fedora"
+		package "openssl-devel"
+	  when "debian","ubuntu"
+		package "libssl-dev"
+	end
+
+	base_uri = "http://nodejs.org/dist/"
+	base_filename = "node-v#{node[:nodejs][:version]}"
+	package_file = "#{base_filename}.tar.gz"
+
+	directory "/tmp/nodejs_pkg" do
+		owner "root"
+		action :create
+		mode 0755
+	end
+
+	remote_file "/tmp/nodejs_pkg/#{package_file}" do
+		source base_uri + package_file
+		owner "root"
+		mode 0644
+	end
+
+	execute "nodejs-src-unpack" do
+		cwd "/tmp/nodejs_pkg"
+		command "tar xvfz #{package_file}"
+	end
+
+	execute "nodejs-src-configure" do
+		cwd "/tmp/nodejs_pkg/#{base_filename}"
+		command "./configure --prefix=#{node[:nodejs][:root_dir]}"
+	end
+
+	execute "nodejs-src-make" do
+		cwd "/tmp/nodejs_pkg/#{base_filename}"
+		command "make"
+	end
+
+	execute "nodejs-src-make-install" do
+		cwd "/tmp/nodejs_pkg/#{base_filename}"
+		command "make install"
+	end
 end
-
-bash "install nodejs from source" do
-  cwd "/usr/local/src"
-  user "root"
-  code <<-EOH
-    wget http://nodejs.org/dist/node-v#{node[:nodejs][:version]}.tar.gz && \
-    tar zxf node-v#{node[:nodejs][:version]}.tar.gz && \
-    cd node-v#{node[:nodejs][:version]} && \
-    ./configure --prefix=#{node[:nodejs][:dir]} && \
-    make && \
-    make install
-  EOH
-  not_if do `#{node[:nodejs][:dir]}/bin/node -v`.include? "v#{node[:nodejs][:version]}" end
-end
-

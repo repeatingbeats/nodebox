@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: nodejs
-# Attributes:: nodejs
+# Author:: Taliesin Sisson (<taliesins@yahoo.com>)
+# Cookbook Name:: riaksearch
 #
-# Copyright 2010, Promet Solutions
+# Copyright (c) 2011 Talifun Ltd.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 # limitations under the License.
 #
 
-default.nodejs.version = "0.4.11"
-default.nodejs.prefix = "/usr/local"
-default.nodejs.npm = "1.0.26"
-default.nodejs.root_dir = default.nodejs.prefix
+default.riak_search.riak_search.search_backend = :merge_index_backend
+default.riak_search.riak_search.java_home = "/usr"
+default.riak_search.riak_search.max_search_results = 100000

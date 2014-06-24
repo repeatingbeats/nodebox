@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: nodejs
-# Attributes:: nodejs
+# Author:: Benjamin Black (<b@b3k.us>) and Sean Cribbs (<sean@basho.com>)
+# Cookbook Name:: riak
 #
-# Copyright 2010, Promet Solutions
+# Copyright (c) 2010 Basho Technologies, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,7 +17,12 @@
 # limitations under the License.
 #
 
-default.nodejs.version = "0.4.11"
-default.nodejs.prefix = "/usr/local"
-default.nodejs.npm = "1.0.26"
-default.nodejs.root_dir = default.nodejs.prefix
+include_attribute "riak::core"
+
+default.riak.erlang.node_name = "#{default.riak.service.name}@#{default.riak.core.http[0][0]}"
+default.riak.erlang.cookie = "riak"
+default.riak.erlang.kernel_polling = true
+default.riak.erlang.async_threads = 64
+default.riak.erlang.smp = "enable"
+default.riak.erlang.env_vars.ERL_MAX_PORTS = 4096
+default.riak.erlang.env_vars.ERL_FULLSWEEP_AFTER = 0

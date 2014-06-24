@@ -1,0 +1,14 @@
+#!upstart
+description "Riak - <%= node[:riak][:service][:name] %>"
+author      "Taliesin Sisson"
+
+start on startup
+stop on shutdown
+
+script
+  sudo touch <%= node[:riak][:package][:root_dir] %>/log/<%= node[:riak][:service][:name] %>.log
+  sudo chown <%= node[:riak][:service][:user] %> <%= node[:riak][:package][:root_dir] %>/<%= node[:riak][:service][:name] %>.log
+  sudo chown <%= node[:riak][:service][:user] %> <%= node[:riak][:package][:config_dir] %>/app.config
+  sudo chown <%= node[:riak][:service][:user] %> <%= node[:riak][:package][:config_dir] %>/vm.args
+  sudo -u <%= node[:riak][:service][:user] %> <%= node[:riak][:package][:root_dir] %>/bin/riak start >> <%= node[:riak][:package][:root_dir] %>/log/<%= node[:riak][:service][:name] %>.log 2>&1
+end script
